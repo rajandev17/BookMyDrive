@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="26dp"
+    android:background="@drawable/panel_item_bg"
+    android:gravity="center"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp"
+    android:text="Rajan"
+    android:textSize="12sp" />
+
