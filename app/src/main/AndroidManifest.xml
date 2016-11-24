@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ggktech.bookmydrive">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,7 +18,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".CreateDriveActivity"></activity>
+        <activity android:name=".CreateDriveActivity" />
+        <activity android:name=".ViewDriveActivity" />
+        <activity android:name=".AddPanelActivity" />
+        <activity android:name=".ContactActivity"></activity>
     </application>
 
 </manifest>

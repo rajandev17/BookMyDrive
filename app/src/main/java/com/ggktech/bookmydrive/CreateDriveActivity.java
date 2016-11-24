@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +45,9 @@ public class CreateDriveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_drive);
+        getSupportActionBar().setTitle("Schedule Drive");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         driveDesc = (EditText) findViewById(R.id.drive_desc);
         driveDate = (EditText) findViewById(R.id.drive_date);
         driveName = (EditText) findViewById(R.id.drive_name);
@@ -55,7 +59,7 @@ public class CreateDriveActivity extends AppCompatActivity {
         dbHelper = new DBHelper(CreateDriveActivity.this);
         panelMembers = dbHelper.getAllPanelMembers();
         noPanel = new TextView(this);
-        noPanel.setText("No Panel selected");
+        noPanel.setText("Click on edit to modify panel members");
         int i = 0;
         for (Panel panel : panelMembers) {
             panelNames.add(panel.getName());
@@ -68,27 +72,41 @@ public class CreateDriveActivity extends AppCompatActivity {
         addListeners();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void addListeners() {
         driveCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(validateSuccess()) {
-                    Drive drive = new Drive();
-                    drive.setStatusId(Status.CREATED);
-                    drive.setTechId(driveTechnology.getSelectedItemPosition());
-                    drive.setName(driveName.getText().toString());
-                    drive.setLocation(driveLocation.getText().toString());
-                    drive.setDesc(driveDesc.getText().toString());
-                    drive.setDriveDate(driveDate.getText().toString());
-                    int driverId = (int) dbHelper.addDrive(drive);
-                    for (int i = 0; i < selectedPanelMembers.size(); i++) {
-                        if (selectedPanelMembers.get(i)) {
-                            dbHelper.assignPanelMemberToDrive(panelMembers.get(i).getId(), driverId);
+                    if(drivePanel.getChildCount() >= 2) {
+                        Drive drive = new Drive();
+                        drive.setStatusId(Status.CREATED);
+                        drive.setTechId(driveTechnology.getSelectedItemPosition());
+                        drive.setName(driveName.getText().toString());
+                        drive.setLocation(driveLocation.getText().toString());
+                        drive.setDesc(driveDesc.getText().toString());
+                        drive.setDriveDate(driveDate.getText().toString());
+                        int driverId = (int) dbHelper.addDrive(drive);
+                        for (int i = 0; i < selectedPanelMembers.size(); i++) {
+                            if (selectedPanelMembers.get(i)) {
+                                dbHelper.assignPanelMemberToDrive(panelMembers.get(i).getId(), driverId);
+                            }
                         }
+                        Toast.makeText(CreateDriveActivity.this, "Successfully Created Drive", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    }else {
+                        Toast.makeText(CreateDriveActivity.this, "Add at least two panel members", Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(CreateDriveActivity.this, "Successfully Created Drive", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(CreateDriveActivity.this, "Please provide all details, Add atleast two panel members", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateDriveActivity.this, "Please provide all details", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -118,8 +136,13 @@ public class CreateDriveActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(CreateDriveActivity.this);
                 final ListView panelList = new ListView(CreateDriveActivity.this);
                 Button btnDone = new Button(CreateDriveActivity.this);
+                btnDone.setTransformationMethod(null);
                 btnDone.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                btnDone.setText("Update Panel");
+                if(panelNames.size() > 0) {
+                    btnDone.setText("Update Panel");
+                }else {
+                    btnDone.setText("No Panel members Found.");
+                }
 
                 btnDone.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -171,7 +194,7 @@ public class CreateDriveActivity extends AppCompatActivity {
     }
 
     private boolean validateSuccess() {
-        return !driveName.getText().toString().isEmpty() && !driveLocation.getText().toString().isEmpty() && !driveDesc.getText().toString().isEmpty() && driveTechnology.getSelectedItemPosition() != 0 && date != null && drivePanel.getChildCount() >= 2;
+        return !driveName.getText().toString().isEmpty() && !driveLocation.getText().toString().isEmpty() && !driveDesc.getText().toString().isEmpty() && driveTechnology.getSelectedItemPosition() != 0 && date != null;
     }
 
     private void populateInitialData() {

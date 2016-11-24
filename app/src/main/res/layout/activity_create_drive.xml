@@ -149,6 +149,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/colorAccent"
             android:text="Create"
+            android:elevation="4dp"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="14sp" />

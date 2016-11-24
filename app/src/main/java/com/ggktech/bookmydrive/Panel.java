@@ -12,6 +12,11 @@ public class Panel {
         this.name = name;
     }
 
+    public Panel(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

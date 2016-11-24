@@ -23,6 +23,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         preferences = getSharedPreferences("Drive",MODE_PRIVATE);
         editor = preferences.edit();
+        if(preferences.getBoolean("isLogged",false)){
+            LoginActivity.this.finish();
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        }
         dbHelper = new DBHelper(this);
         bindUI();
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -36,33 +40,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if(name.equals("admin") && password.equals("welcome")) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                     editor.putBoolean("isLogged",true);
+                     editor.commit();
+                    LoginActivity.this.finish();
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 }else {
                     Toast.makeText(LoginActivity.this, "Invalid username and password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        if(preferences.getBoolean("isFirst",true)){
-            addPanel();
-            editor.putBoolean("isFirst",false);
-            editor.commit();
-        }
-    }
-
-    private void addPanel() {
-        dbHelper.addPanelMember("James Shelbourne");
-        dbHelper.addPanelMember("Rajan");
-        dbHelper.addPanelMember("Abhilash");
-        dbHelper.addPanelMember("Noah Mccalment");
-        dbHelper.addPanelMember("Agni");
-        dbHelper.addPanelMember("Chaitanya");
-        dbHelper.addPanelMember("Sudheer");
-        dbHelper.addPanelMember("Karthik");
-        dbHelper.addPanelMember("Shane Oswald");
-        dbHelper.addPanelMember("Ravinder");
-        dbHelper.addPanelMember("Rakesh");
-        dbHelper.addPanelMember("Sathvik");
-        dbHelper.addPanelMember("Sai Pawan");
     }
 
     private void bindUI(){

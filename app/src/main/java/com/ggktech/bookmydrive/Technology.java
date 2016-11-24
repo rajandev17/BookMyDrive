@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class Technology {
 
-    private Map<Integer,String> technologies;
+    List<String> techValues = new ArrayList<>();
     public static final int JAVA = 1;
     public static final int DOT_NET = 2;
     public static final int BI = 3;
@@ -19,21 +19,19 @@ public class Technology {
     public static final int NODE = 4;
 
     public Technology(){
-        technologies = new HashMap<>();
-        technologies.put(1,"Java");
-        technologies.put(2,".Net");
-        technologies.put(3,"Business Intelligence");
-        technologies.put(4,"Angular");
-        technologies.put(5,"Node");
+        techValues.add(0,"Select Technology");
+        techValues.add(1,"Java");
+        techValues.add(2,".Net");
+        techValues.add(3,"Business Intelligence");
+        techValues.add(4,"Angular");
+        techValues.add(5,"Node");
     }
 
     public String getTechnology(int tech){
-        return technologies.get(tech);
+        return techValues.get(tech);
     }
 
     public List<String> getTechList(){
-        List<String> techValues = new ArrayList<>(technologies.values());
-        techValues.add(0,"Select Technology");
         return techValues;
     }
 

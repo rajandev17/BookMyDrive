@@ -14,12 +14,12 @@ import java.util.List;
  * Sqlite Helper
  */
 
-public class DBHelper extends SQLiteOpenHelper {
+class DBHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "BookMyDriverDB";
+    private static final String DATABASE_NAME = "AppStorage";
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -28,6 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createDriveTable(sqLiteDatabase);
         createPanelTable(sqLiteDatabase);
         createDrivePanelTable(sqLiteDatabase);
+        createCommentTable(sqLiteDatabase);
     }
 
     @Override
@@ -35,6 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
         dropDriveTable(sqLiteDatabase);
         dropDrivePanelTable(sqLiteDatabase);
         dropPanelTable(sqLiteDatabase);
+        dropCommentTable(sqLiteDatabase);
         onCreate(sqLiteDatabase);
     }
 
@@ -42,27 +44,32 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE Drive(id integer primary key autoincrement,name text,location text,tech_id int,status_id int,drive_date text,desc text)");
     }
 
-    private void dropDriveTable(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE Drive");
-    }
-
     private void createPanelTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE Panel(id integer primary key autoincrement,name text)");
-    }
-
-    private void dropPanelTable(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE Panel");
     }
 
     private void createDrivePanelTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE DrivePanel(drive_id int,panel_id int)");
     }
 
+    private void createCommentTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE Comment(drive_id int,name text,comment text)");
+    }
+
+    private void dropDriveTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE Drive");
+    }
+    private void dropCommentTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE Comment");
+    }
     private void dropDrivePanelTable(SQLiteDatabase db) {
         db.execSQL("DROP TABLE DrivePanel");
     }
+    private void dropPanelTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE Panel");
+    }
 
-    public long addDrive(Drive drive) {
+    long addDrive(Drive drive) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", drive.getName());
@@ -94,14 +101,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return drives;
     }
 
-    public void addPanelMember(String name){
+    long addPanelMember(String name){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name",name);
-        db.insert("Panel",null,values);
+        return db.insert("Panel",null,values);
     }
 
-    public List<Panel> getAllPanelMembers(){
+    List<Panel> getAllPanelMembers(){
         List<Panel> panelList = new ArrayList<>();
         Cursor panelCursor = this.getReadableDatabase().rawQuery("SELECT * FROM Panel",null);
         if(panelCursor.moveToFirst()){
@@ -115,9 +122,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return panelList;
     }
 
+    public List<Comment> getCommentsForDrive(int driveId){
+        List<Comment> commentList = new ArrayList<>();
+        String query = "SELECT * FROM Comment WHERE drive_id = "+ driveId;
+        Cursor c = this.getReadableDatabase().rawQuery(query,null);
+        if(c.moveToFirst()){
+            do{
+                Comment comment = new Comment();
+                comment.setName(c.getString(c.getColumnIndex("name")));
+                comment.setDriverId(c.getInt(c.getColumnIndex("drive_id")));
+                comment.setComment(c.getString(c.getColumnIndex("comment")));
+                commentList.add(comment);
+            }while (c.moveToNext());
+        }
+        c.close();
+        return commentList;
+    }
+
+    public void AddCommentToDrive(int drive_id,String name, String comment){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name",name);
+        values.put("comment",comment);
+        values.put("drive_id",drive_id);
+        db.insert("Comment",null,values);
+    }
+
     public List<Panel> getPanelMembersForDrive(int driveId){
         List<Panel> drivePanelList = new ArrayList<>();
-        String query = "SELECT * FROM Panel p INNER JOIN DrivePanel dp ON p.panel_id == dp.panel_id WHERE dp.drive_id = "+ driveId;
+        String query = "SELECT * FROM Panel p INNER JOIN DrivePanel dp ON p.id == dp.panel_id WHERE dp.drive_id = "+ driveId;
         Cursor c = this.getReadableDatabase().rawQuery(query,null);
         if(c.moveToFirst()){
             do{

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drive_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/panel_item_bg"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context="com.ggktech.bookmydrive.CreateDriveActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/drive_item_header"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/drive_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Drive Name"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/drive_item_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Drive Location"
+            android:textColor="#666"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginTop="6dp"
+        android:background="#bbb" />
+
+    <TextView
+        android:id="@+id/drive_item_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Drive Description"
+        android:textColor="#555"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/panel_item_crew_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Panel Crew"
+        android:textColor="#555"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <com.ggktech.bookmydrive.PredicateLayout
+        android:id="@+id/drive_panel_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:id="@+id/drive_item_footer"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/drive_item_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scheduled Date"
+            android:textColor="#555"
+            android:textSize="12sp"
+            android:layout_marginRight="10dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/drive_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="29-oct-1993"
+            android:textColor="#555"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginTop="6dp"
+        android:background="#bbb" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:id="@+id/drive_item_comment_section"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/drive_item_view_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="View Comments"
+            android:textColor="#555"
+            android:gravity="center"
+            android:textSize="11sp" />
+    </LinearLayout>
+</LinearLayout>
